@@ -1,7 +1,7 @@
-mod info;
-
-use info::battery;
-use info::storage;
+mod cli;
+mod domain;
+use domain::battery;
+use domain::storage;
 
 fn main() {
     println!("=== SYSTEM STATUS ===\n");
