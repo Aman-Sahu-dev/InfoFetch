@@ -1,8 +1,13 @@
-use clap::{Arg, Command};
+use anyhow::Result;
+use clap::Args;
 
-pub fn command() -> Command {
-    Command::new("battery")
-        .about("Battery information and controls")
-        .subcommand(Command::new("status").about("Show battery status"))
-        .subcommand(Command::new("health").about("Show battery health"))
+use super::{battery::Spec};
+
+#[derive(Args)]
+pub struct BatteryArgs {
+    #[arg(short = 'l' , long = "limit" , value_parser = parse_percentage)]
+    limit: Option<u8>,
+}
+pub fn handle(BatteryArgs) -> Result<()> {
+
 }

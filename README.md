@@ -140,3 +140,6 @@ Early development.
 
 Development begins with system information and will gradually expand toward hardware controls and broader system management.
 
+## License
+
+To be decided.
