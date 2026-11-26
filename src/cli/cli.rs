@@ -4,13 +4,19 @@ use clap::{Parser, Subcommand};
 use crate::domain::battery::{self, cli::BatteryArgs};
 
 #[derive(Parser)]
-#[command(name = inf)]
-pub struct cli {
-    #[derive(Subcommand)]
-    domain: Command,
+#[command(name = "x")]
+pub struct Cli {
+    #[command(subcommand)]
+    command: Command,
 }
 #[derive(Subcommand)]
 pub enum Command {
     #[command(visible_alias = "b")]
     Battery(BatteryArgs),
+}
+pub fn run() -> Result<()> {
+    let cli = Cli::parse();
+    match cli.command {
+        Command::Battery(args) => battery::cli::handle(args),
+    }
 }

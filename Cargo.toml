@@ -5,6 +5,6 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.105"
-clap = "4.6.9"
+clap = { version = "4.6.9", features = ["derive"] }
 nix = { version = "0.31.3", features = ["fs"] }
 thiserror = "2.0.21"

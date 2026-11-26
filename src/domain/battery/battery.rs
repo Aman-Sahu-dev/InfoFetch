@@ -1,4 +1,5 @@
-use std::{fs, path::Path};
+use anyhow::{Context, Result, bail};
+use std::{fmt::format, fs, path::Path};
 pub struct Spec {
     pub capacity: Option<u8>,
     pub health: Option<f64>,
@@ -7,6 +8,7 @@ pub struct Spec {
 }
 impl Spec {
     const BAT_PATH: &'static str = "/sys/class/power_supply/BAT0";
+    const LIMIT_FILE: &'static str = "charge_control_end_threshold";
     pub fn spec() -> Spec {
         Spec {
             capacity: Self::capacity(),
@@ -40,5 +42,13 @@ impl Spec {
     }
     pub fn status() -> Option<String> {
         Self::sysfs("status")
+    }
+    pub fn set_limit(limit: u8) -> Result<()> {
+        if !(1..100).contains(&limit) {
+            bail!("limit must be between 1 and 100");
+        }
+        let path = Path::new(Self::BAT_PATH).join(Self::LIMIT_FILE);
+        fs::write(&path, limit.to_string())
+            .with_context(|| format!("failed to write {} run with sudo", path.display()))
     }
 }
