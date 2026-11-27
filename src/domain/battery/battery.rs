@@ -1,5 +1,5 @@
 use anyhow::{Context, Result, bail};
-use std::{fmt::format, fs, path::Path};
+use std::{fmt, fs, path::Path};
 pub struct Spec {
     pub capacity: Option<u8>,
     pub health: Option<f64>,
@@ -50,5 +50,27 @@ impl Spec {
         let path = Path::new(Self::BAT_PATH).join(Self::LIMIT_FILE);
         fs::write(&path, limit.to_string())
             .with_context(|| format!("failed to write {} run with sudo", path.display()))
+    }
+}
+
+impl fmt::Display for Spec {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "Battery Info:")?;
+        match self.capacity {
+            Some(c) => writeln!(f, "  Capacity : {}%", c)?,
+            None    => writeln!(f, "  Capacity : N/A")?,
+        }
+        match self.health {
+            Some(h) => writeln!(f, "  Health   : {:.1}%", h)?,
+            None    => writeln!(f, "  Health   : N/A")?,
+        }
+        match self.cycles {
+            Some(c) => writeln!(f, "  Cycles   : {}", c)?,
+            None    => writeln!(f, "  Cycles   : N/A")?,
+        }
+        match &self.status {
+            Some(s) => write!(f, "  Status   : {}", s),
+            None    => write!(f, "  Status   : N/A"),
+        }
     }
 }
